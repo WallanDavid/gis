@@ -90,11 +90,13 @@ export default function MapPage() {
         })
       const d2022Url = new URL('../data/elections2022.csv', import.meta.url).href
       const d2024Url = new URL('../data/elections2024.csv', import.meta.url).href
-      const d2022 = await parse(d2022Url)
-      const d2024 = await parse(d2024Url)
+      const d2022Raw = await parse(d2022Url)
+      const d2024Raw = await parse(d2024Url)
+      const d2022 = Array.isArray(d2022Raw) ? d2022Raw : []
+      const d2024 = Array.isArray(d2024Raw) ? d2024Raw : []
       setElections({ 2022: d2022, 2024: d2024 })
       if (!selectedCandidate) {
-        const cs = [...new Set([...d2022, ...d2024].map((x) => x.candidate))]
+        const cs = [...new Set([...(d2022 || []), ...(d2024 || [])].map((x) => x.candidate))].filter(Boolean)
         setSelectedCandidate(cs[0] || null)
       }
     }
