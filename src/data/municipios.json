@@ -1,0 +1,53 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Rio de Janeiro" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-43.8, -22.9],
+            [-43.0, -22.9],
+            [-43.0, -22.7],
+            [-43.8, -22.7],
+            [-43.8, -22.9]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Niterói" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-43.15, -22.95],
+            [-43.0, -22.95],
+            [-43.0, -22.8],
+            [-43.15, -22.8],
+            [-43.15, -22.95]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Duque de Caxias" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-43.4, -22.85],
+            [-43.2, -22.85],
+            [-43.2, -22.65],
+            [-43.4, -22.65],
+            [-43.4, -22.85]
+          ]
+        ]
+      }
+    }
+  ]
+}

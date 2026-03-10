@@ -1,0 +1,7 @@
+candidate,municipio,bairro,zona,total_votos,local_votacao,lat,lon
+Candidato A,Rio de Janeiro,Centro,1,4100,Escola Municipal A,-22.91,-43.18
+Candidato A,Niterói,Icaraí,2,1600,Colégio B,-22.90,-43.10
+Candidato A,Duque de Caxias,Sarapuí,3,800,Escola C,-22.78,-43.30
+Candidato B,Rio de Janeiro,Tijuca,4,1800,Colégio D,-22.93,-43.23
+Candidato B,Niterói,Santa Rosa,5,2100,Escola E,-22.89,-43.11
+Candidato C,Rio de Janeiro,Bangu,6,1300,Escola F,-22.87,-43.47

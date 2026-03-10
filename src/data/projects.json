@@ -1,0 +1,64 @@
+{
+  "projects": [
+    "Projeto 60+",
+    "Projeto Juventude"
+  ],
+  "nuclei": [
+    {
+      "id": "n1",
+      "project": "Projeto 60+",
+      "name": "Núcleo A",
+      "startDate": "2023-01-15",
+      "attended": 85,
+      "municipio": "Rio de Janeiro",
+      "location": { "lat": -22.90, "lon": -43.30 },
+      "participants": [
+        { "name": "Ana Souza", "address": { "lat": -22.92, "lon": -43.28 } },
+        { "name": "Carlos Silva", "address": { "lat": -22.95, "lon": -43.21 } },
+        { "name": "Maria Santos", "address": { "lat": -22.89, "lon": -43.26 } }
+      ]
+    },
+    {
+      "id": "n2",
+      "project": "Projeto 60+",
+      "name": "Núcleo B",
+      "startDate": "2023-02-10",
+      "attended": 72,
+      "municipio": "Niterói",
+      "location": { "lat": -22.89, "lon": -43.11 },
+      "participants": [
+        { "name": "João Pereira", "address": { "lat": -22.92, "lon": -43.10 } },
+        { "name": "Carlos Silva", "address": { "lat": -22.90, "lon": -43.12 } },
+        { "name": "Paula Lima", "address": { "lat": -22.88, "lon": -43.09 } }
+      ]
+    },
+    {
+      "id": "n3",
+      "project": "Projeto 60+",
+      "name": "Núcleo C",
+      "startDate": "2023-03-05",
+      "attended": 64,
+      "municipio": "Duque de Caxias",
+      "location": { "lat": -22.77, "lon": -43.30 },
+      "participants": [
+        { "name": "Marcos Vinicius", "address": { "lat": -22.76, "lon": -43.32 } },
+        { "name": "Maria Santos", "address": { "lat": -22.78, "lon": -43.29 } },
+        { "name": "Fernanda Alves", "address": { "lat": -22.79, "lon": -43.31 } }
+      ]
+    },
+    {
+      "id": "n4",
+      "project": "Projeto Juventude",
+      "name": "Núcleo D",
+      "startDate": "2024-04-01",
+      "attended": 120,
+      "municipio": "Rio de Janeiro",
+      "location": { "lat": -22.91, "lon": -43.24 },
+      "participants": [
+        { "name": "Carlos Silva", "address": { "lat": -22.90, "lon": -43.22 } },
+        { "name": "Lucas Rocha", "address": { "lat": -22.92, "lon": -43.26 } },
+        { "name": "Mariana Costa", "address": { "lat": -22.94, "lon": -43.25 } }
+      ]
+    }
+  ]
+}

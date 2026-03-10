@@ -1,0 +1,69 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "municipio": "Rio de Janeiro", "bairro": "Copacabana" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-43.21, -22.98], [-43.16, -22.98], [-43.16, -22.95], [-43.21, -22.95], [-43.21, -22.98]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "municipio": "Rio de Janeiro", "bairro": "Ipanema" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-43.24, -22.99], [-43.19, -22.99], [-43.19, -22.96], [-43.24, -22.96], [-43.24, -22.99]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "municipio": "Rio de Janeiro", "bairro": "Tijuca" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-43.27, -22.94], [-43.2, -22.94], [-43.2, -22.89], [-43.27, -22.89], [-43.27, -22.94]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "municipio": "Rio de Janeiro", "bairro": "Centro" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-43.21, -22.93], [-43.16, -22.93], [-43.16, -22.90], [-43.21, -22.90], [-43.21, -22.93]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "municipio": "Niterói", "bairro": "Icaraí" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-43.12, -22.93], [-43.08, -22.93], [-43.08, -22.90], [-43.12, -22.90], [-43.12, -22.93]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "municipio": "Niterói", "bairro": "Santa Rosa" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-43.13, -22.92], [-43.10, -22.92], [-43.10, -22.89], [-43.13, -22.89], [-43.13, -22.92]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "municipio": "Duque de Caxias", "bairro": "Centro" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-43.33, -22.81], [-43.28, -22.81], [-43.28, -22.77], [-43.33, -22.77], [-43.33, -22.81]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "municipio": "Duque de Caxias", "bairro": "Sarapuí" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-43.32, -22.79], [-43.29, -22.79], [-43.29, -22.76], [-43.32, -22.76], [-43.32, -22.79]]]
+      }
+    }
+  ]
+}
