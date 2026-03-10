@@ -6,7 +6,7 @@ import Sidebar from '../components/Sidebar'
 import { useAuth } from '../context/useAuth'
 import municipios from '../data/municipios.json'
 import { wmsPresets } from '../data/wmsPresets'
-import { candidatos } from '../data/eleicoesMock'
+import { useCandidatos } from '../hooks/useCandidatos'
 import ElectoralLayer from '../components/electoral/ElectoralLayer'
 import { projetos } from '../data/projetosMock'
 import { useProjetos } from '../hooks/useProjetos'
@@ -42,6 +42,7 @@ function divergingColor(delta) {
 export default function MapPage() {
   const { user, logout } = useAuth()
   const mapRef = useRef(null)
+  const candidatos = useCandidatos()
   const [selectedProject, setSelectedProject] = useState(null)
   const [showAddresses, setShowAddresses] = useState(false)
   const [elections, setElections] = useState({ 2022: [], 2024: [] })

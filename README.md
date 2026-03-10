@@ -51,6 +51,20 @@ npm install
 npm run dev
 ```
 
+## 🔄 Atualizar dados do TSE
+
+Requisitos: internet ativa. Os dados são obtidos do Portal de Dados Abertos do TSE.
+
+```bash
+npm run tse:download
+```
+
+O script baixa os conjuntos de 2022 e 2024, filtra apenas RJ, agrega e salva em:
+
+- src/data/eleicoesReais.js
+
+Se indisponível, o app usa src/data/eleicoesMock.js como fallback.
+
 ## 🔑 Credenciais de Teste
 
 Perfil | Email | Senha  
@@ -93,4 +107,3 @@ src/
 ## 📄 Licença
 
 MIT
-
