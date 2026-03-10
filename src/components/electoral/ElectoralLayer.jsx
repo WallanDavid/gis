@@ -18,5 +18,5 @@ export default function ElectoralLayer({
   if (!candidatoId) return null
   if (modo === 'points') return <PontosVotacaoLayer pontos={pontos} cor={cor} opacity={opacity} />
   if (modo === 'heat') return <HeatmapLayer pontos={pontos} cor={cor} opacity={opacity} />
-  return <CoropleticoLayer porBairro={porBairro} cor={cor} />
+  return <CoropleticoLayer key={`${candidatoId}-${ano}`} porBairro={porBairro} cor={cor} />
 }

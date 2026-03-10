@@ -10,14 +10,13 @@ export default function CoropleticoLayer({ cor, porBairro }) {
     const key = `${m}|${b}`
     const v = porBairro[key] || 0
     const fillColor = scaleSequential(v, max, cor)
-    const intensidade = max ? Math.min(0.8, v / max) : 0.2
     return {
       fillColor,
-      fillOpacity: 0.12 + intensidade * 0.13,
-      weight: 0.2,
-      color: '#cbd5e1',
-      opacity: 0.3,
-      smoothFactor: 2,
+      fillOpacity: 1,
+      weight: 0.1,
+      color: '#e2e8f0',
+      opacity: 0.2,
+      smoothFactor: 2.5,
       dashArray: null,
       lineCap: 'round',
       lineJoin: 'round',
@@ -28,23 +27,22 @@ export default function CoropleticoLayer({ cor, porBairro }) {
     const b = feature.properties.bairro
     const key = `${m}|${b}`
     const v = porBairro[key] || 0
-    const intensidade = max ? Math.min(0.8, v / max) : 0.2
     const baseStyle = style(feature)
     layer.bindTooltip(`${b} • ${v} votos`)
     layer.on('mouseover', () => {
       layer.setStyle({
-        fillOpacity: 0.3,
-        weight: 0.5,
+        weight: 0.3,
         color: '#64748b',
+        opacity: 0.4,
       })
       if (layer.bringToFront) layer.bringToFront()
     })
     layer.on('mouseout', () => {
       layer.setStyle({
         ...baseStyle,
-        fillOpacity: 0.12 + intensidade * 0.13,
-        weight: 0.2,
-        color: '#cbd5e1',
+        weight: 0.1,
+        color: '#e2e8f0',
+        opacity: 0.2,
       })
     })
   }

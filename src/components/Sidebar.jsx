@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs'
 import InfoTooltip from './InfoTooltip'
+import { Camera, FileText, Map as MapIcon, BarChart as BarIcon, Users, Lightbulb, Share2, Copy, Download, Code, Globe } from 'lucide-react'
 
 export default function Sidebar({
   projects,
@@ -309,19 +310,47 @@ export default function Sidebar({
           </TabsContent>
 
           <TabsContent value="exportar" className="space-y-4">
-            <div>
-              <div className="text-sm font-medium mb-1">Snapshot do Mapa</div>
-              <button className="w-full bg-slate-800 text-white rounded p-2" onClick={onExportPng}>Exportar como PNG</button>
-            </div>
-            <div>
-              <div className="text-sm font-medium mb-1">Relatório Executivo PDF</div>
-              <div className="space-y-1 text-sm">
-                <label className="flex items-center gap-2"><input type="checkbox" checked={incluirMapa} onChange={(e)=>onChangeIncluirMapa(e.target.checked)} />Incluir snapshot do mapa</label>
-                <label className="flex items-center gap-2"><input type="checkbox" checked={incluirGraficos} onChange={(e)=>onChangeIncluirGraficos(e.target.checked)} />Incluir gráficos eleitorais</label>
-                <label className="flex items-center gap-2"><input type="checkbox" checked={incluirProjetos} onChange={(e)=>onChangeIncluirProjetos(e.target.checked)} />Incluir lista de projetos</label>
-                <label className="flex items-center gap-2"><input type="checkbox" checked={incluirInsights} onChange={(e)=>onChangeIncluirInsights(e.target.checked)} />Incluir insights automáticos</label>
+            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 hover:shadow-md transition-shadow">
+              <div className="flex items-center gap-2 mb-3">
+                <Camera className="w-5 h-5 text-blue-500" />
+                <div className="font-medium text-slate-700">Snapshot do Mapa</div>
               </div>
-              <button className="w-full bg-slate-800 text-white rounded p-2 mt-2" onClick={onGeneratePdf}>Gerar Relatório PDF</button>
+              <button className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white border-0 rounded px-4 py-2 flex items-center justify-center gap-2" onClick={onExportPng}>
+                <Camera className="w-4 h-4" />
+                Exportar como PNG
+              </button>
+            </div>
+            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <FileText className="w-5 h-5 text-purple-500" />
+                <div className="font-medium text-slate-700">Relatório Executivo</div>
+              </div>
+              <div className="space-y-2 mb-3">
+                <label className="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors">
+                  <MapIcon className="w-4 h-4 text-slate-400" />
+                  <span className="text-sm text-slate-600 flex-1">Incluir snapshot do mapa</span>
+                  <input type="checkbox" className="rounded border-slate-300 text-blue-500" checked={incluirMapa} onChange={(e)=>onChangeIncluirMapa(e.target.checked)} />
+                </label>
+                <label className="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors">
+                  <BarIcon className="w-4 h-4 text-slate-400" />
+                  <span className="text-sm text-slate-600 flex-1">Incluir gráficos eleitorais</span>
+                  <input type="checkbox" className="rounded border-slate-300 text-blue-500" checked={incluirGraficos} onChange={(e)=>onChangeIncluirGraficos(e.target.checked)} />
+                </label>
+                <label className="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors">
+                  <Users className="w-4 h-4 text-slate-400" />
+                  <span className="text-sm text-slate-600 flex-1">Incluir lista de projetos</span>
+                  <input type="checkbox" className="rounded border-slate-300 text-blue-500" checked={incluirProjetos} onChange={(e)=>onChangeIncluirProjetos(e.target.checked)} />
+                </label>
+                <label className="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors">
+                  <Lightbulb className="w-4 h-4 text-slate-400" />
+                  <span className="text-sm text-slate-600 flex-1">Incluir insights automáticos</span>
+                  <input type="checkbox" className="rounded border-slate-300 text-blue-500" checked={incluirInsights} onChange={(e)=>onChangeIncluirInsights(e.target.checked)} />
+                </label>
+              </div>
+              <button className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white border-0 rounded px-4 py-2 flex items-center justify-center gap-2" onClick={onGeneratePdf}>
+                <FileText className="w-4 h-4" />
+                Gerar Relatório PDF
+              </button>
               {typeof progressoPDF === 'number' && gerandoPDF ? (
                 <div className="mt-2">
                   <div className="h-2 bg-gray-200 rounded"><div className="h-2 bg-blue-600 rounded transition-all" style={{ width: `${progressoPDF}%` }} /></div>
@@ -329,21 +358,30 @@ export default function Sidebar({
                 </div>
               ) : null}
             </div>
-            <div>
-              <div className="text-sm font-medium mb-1">Compartilhar Análise</div>
-              <div className="flex gap-2">
-                <input className="flex-1 border rounded p-2 text-xs" value={shareUrl} readOnly placeholder="Clique em gerar link" />
-                <button className="border rounded px-3" onClick={onGenerateShare}>Gerar</button>
+            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Share2 className="w-5 h-5 text-green-500" />
+                <div className="font-medium text-slate-700">Compartilhar Análise</div>
               </div>
-              <button className="w-full border rounded p-2 mt-2" onClick={onCopyShare}>Copiar link</button>
+              <div className="flex gap-2 mb-2">
+                <input className="flex-1 px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value={shareUrl} readOnly placeholder="Clique em gerar link" />
+                <button className="bg-slate-900 hover:bg-slate-800 text-white border-0 rounded px-3" onClick={onGenerateShare}>Gerar</button>
+              </div>
+              <button className="w-full border border-slate-200 rounded p-2 hover:bg-slate-50 text-slate-600 flex items-center justify-center gap-2" onClick={onCopyShare}>
+                <Copy className="w-4 h-4" />
+                Copiar link
+              </button>
             </div>
-            <div>
-              <div className="text-sm font-medium mb-1">Exportar Dados</div>
+            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Download className="w-5 h-5 text-amber-500" />
+                <div className="font-medium text-slate-700">Exportar Dados</div>
+              </div>
               <div className="grid grid-cols-2 gap-2">
-                <button className="border rounded p-2 text-sm" onClick={onExportCsv}>CSV</button>
-                <button className="border rounded p-2 text-sm" onClick={onExportGeoJson}>GeoJSON</button>
-                <button className="border rounded p-2 text-sm" onClick={onExportJson}>JSON</button>
-                <button className="border rounded p-2 text-sm" onClick={onExportKml}>KML</button>
+                <button className="border border-slate-200 rounded p-2 hover:bg-slate-50 text-slate-600 flex items-center justify-center gap-2 text-sm" onClick={onExportCsv}><FileText className="w-4 h-4" />CSV</button>
+                <button className="border border-slate-200 rounded p-2 hover:bg-slate-50 text-slate-600 flex items-center justify-center gap-2 text-sm" onClick={onExportGeoJson}><MapIcon className="w-4 h-4" />GeoJSON</button>
+                <button className="border border-slate-200 rounded p-2 hover:bg-slate-50 text-slate-600 flex items-center justify-center gap-2 text-sm" onClick={onExportJson}><Code className="w-4 h-4" />JSON</button>
+                <button className="border border-slate-200 rounded p-2 hover:bg-slate-50 text-slate-600 flex items-center justify-center gap-2 text-sm" onClick={onExportKml}><Globe className="w-4 h-4" />KML</button>
               </div>
             </div>
             <label className="flex items-center gap-2 text-sm text-slate-700">

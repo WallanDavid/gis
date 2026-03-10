@@ -206,16 +206,30 @@ export default function MapPage() {
   }
 
   const exportarPNG = async () => {
-    const node = document.getElementById('map-root')
-    if (!node) return
     try {
-      const canvas = await html2canvas(node, { scale: 2, backgroundColor: '#ffffff', useCORS: true, logging: false })
-      const blob = await new Promise((res) => canvas.toBlob(res, 'image/png'))
-      if (blob) saveAs(blob, `snapshot-geointel-${Date.now()}.png`)
+      const mapaElement = document.querySelector('.leaflet-container')
+      if (!mapaElement) {
+        toast.error('Elemento do mapa não encontrado')
+        return
+      }
+      toast.loading('Gerando snapshot...')
+      const canvas = await html2canvas(mapaElement, {
+        scale: 2,
+        backgroundColor: '#ffffff',
+        allowTaint: false,
+        useCORS: true,
+        logging: false,
+        windowWidth: mapaElement.scrollWidth,
+        windowHeight: mapaElement.scrollHeight,
+      })
+      const link = document.createElement('a')
+      link.download = `geointel-snapshot-${Date.now()}.png`
+      link.href = canvas.toDataURL('image/png')
+      link.click()
       toast.success('Snapshot salvo!')
-    } catch (e) {
-      console.error('Erro ao exportar PNG', e)
-      toast.error('Erro ao gerar snapshot')
+    } catch (error) {
+      console.error('Erro no snapshot:', error)
+      toast.error(`Erro ao gerar snapshot: ${error.message}`)
     }
   }
 
