@@ -75,33 +75,75 @@ export default function MapPage() {
   const [shareUrl, setShareUrl] = useState('')
   const [gerandoPDF, setGerandoPDF] = useState(false)
   const [progressoPDF, setProgressoPDF] = useState(0)
-  const loadingElections = false
+  const [loadingElections, setLoadingElections] = useState(true)
+
+  // Loader otimizado: carrega 2024 primeiro; 2022 sob demanda (comparar ou seleção)
+  useEffect(() => {
+    const parseCsv = (url) =>
+      new Promise((resolve) => {
+        let rows = []
+        Papa.parse(url, {
+          header: true,
+          download: true,
+          worker: true,
+          dynamicTyping: true,
+          skipEmptyLines: true,
+          fastMode: true,
+          chunk: (res) => {
+            rows = rows.concat(res.data || [])
+          },
+          complete: () => resolve(rows),
+        })
+      })
+    const load2024 = async () => {
+      try {
+        setLoadingElections(true)
+        const d2024Url = new URL('../data/elections2024.csv', import.meta.url).href
+        const d2024 = await parseCsv(d2024Url)
+        setElections((prev) => ({ ...prev, 2024: Array.isArray(d2024) ? d2024 : [] }))
+        if (!selectedCandidate) {
+          const cs = [...new Set((d2024 || []).map((x) => x.candidate))].filter(Boolean)
+          setSelectedCandidate(cs[0] || null)
+        }
+      } finally {
+        setLoadingElections(false)
+      }
+    }
+    load2024()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
-    const load = async () => {
-      const parse = (url) =>
-        new Promise((res) => {
+    // Carrega 2022 somente quando necessário
+    if ((compare || selectedYear === 2022) && !(elections[2022] && elections[2022].length)) {
+      const d2022Url = new URL('../data/elections2022.csv', import.meta.url).href
+      const parseCsv = (url) =>
+        new Promise((resolve) => {
+          let rows = []
           Papa.parse(url, {
             header: true,
             download: true,
+            worker: true,
             dynamicTyping: true,
-            complete: (r) => res(r.data),
+            skipEmptyLines: true,
+            fastMode: true,
+            chunk: (res) => {
+              rows = rows.concat(res.data || [])
+            },
+            complete: () => resolve(rows),
           })
         })
-      const d2022Url = new URL('../data/elections2022.csv', import.meta.url).href
-      const d2024Url = new URL('../data/elections2024.csv', import.meta.url).href
-      const d2022Raw = await parse(d2022Url)
-      const d2024Raw = await parse(d2024Url)
-      const d2022 = Array.isArray(d2022Raw) ? d2022Raw : []
-      const d2024 = Array.isArray(d2024Raw) ? d2024Raw : []
-      setElections({ 2022: d2022, 2024: d2024 })
-      if (!selectedCandidate) {
-        const cs = [...new Set([...(d2022 || []), ...(d2024 || [])].map((x) => x.candidate))].filter(Boolean)
-        setSelectedCandidate(cs[0] || null)
-      }
+      ;(async () => {
+        setLoadingElections(true)
+        try {
+          const d2022 = await parseCsv(d2022Url)
+          setElections((prev) => ({ ...prev, 2022: Array.isArray(d2022) ? d2022 : [] }))
+        } finally {
+          setLoadingElections(false)
+        }
+      })()
     }
-    load()
-  }, [selectedCandidate])
+  }, [compare, selectedYear, elections])
 
   const projects = useMemo(() => {
     return (user?.projects || [])
