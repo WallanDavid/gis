@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs'
 import InfoTooltip from './InfoTooltip'

@@ -16,7 +16,7 @@ import html2canvas from 'html2canvas'
 import { saveAs } from 'file-saver'
 import { gerarRelatorioPDF } from '../utils/relatorioPDF'
 import { toast } from 'react-hot-toast'
-import domtoimage from 'dom-to-image-more'
+ 
 
 const centerRJ = [-22.9, -43.2]
 
@@ -74,7 +74,7 @@ export default function MapPage() {
   const [shareUrl, setShareUrl] = useState('')
   const [gerandoPDF, setGerandoPDF] = useState(false)
   const [progressoPDF, setProgressoPDF] = useState(0)
-  const [loadingElections, setLoadingElections] = useState(false)
+  const loadingElections = false
 
   useEffect(() => {
     const load = async () => {
@@ -189,7 +189,7 @@ export default function MapPage() {
           toast.success('🔗 Estado restaurado do link compartilhado!')
           if (estado.municipioFiltro) centralizarMapa(estado.municipioFiltro)
         }
-      } catch (error) {
+      } catch {
         toast.error('Link inválido ou corrompido')
       }
     }
@@ -345,15 +345,7 @@ export default function MapPage() {
     if (!v) setMeasurePoints([])
   }
 
-  const exportPng = async () => {
-    const node = document.getElementById('map-root')
-    if (!node) return
-    const dataUrl = await domtoimage.toPng(node)
-    const a = document.createElement('a')
-    a.href = dataUrl
-    a.download = 'geointel_rj.png'
-    a.click()
-  }
+ 
 
   const isValidWmsUrl = (url) => {
     if (!url) return false
