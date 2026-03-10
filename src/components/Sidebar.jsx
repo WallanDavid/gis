@@ -89,7 +89,7 @@ export default function Sidebar({
   const chartData = useMemo(() => {
     if (!votesData) return []
     if (!compareData) return votesData
-    return votesData.map((d) => ({ ...d, delta: compareData[d.m] || 0 }))
+    return (votesData || []).map((d) => ({ ...d, delta: compareData[d.m] || 0 }))
   }, [votesData, compareData])
   return (
     <div className="w-full h-full flex flex-col border-l border-slate-200 bg-white">

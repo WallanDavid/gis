@@ -300,7 +300,7 @@ export default function MapPage() {
   }
 
   const exportarCSV = () => {
-    const rows = projetosData.participants.map((p) => ({
+    const rows = (projetosData?.participants || []).map((p) => ({
       id: p.id,
       nome: p.nome,
       idade: p.idade,
@@ -313,13 +313,13 @@ export default function MapPage() {
       lon: p.enderecoResidencial.coordenadas[1],
     }))
     const header = Object.keys(rows[0] || {})
-    const csv = [header.join(','), ...rows.map((r) => header.map((h) => JSON.stringify(r[h] ?? '')).join(','))].join('\n')
+    const csv = [header.join(','), ...(rows || []).map((r) => header.map((h) => JSON.stringify(r[h] ?? '')).join(','))].join('\n')
     const blob = new Blob([csv], { type: 'text/csv' })
     saveAs(blob, `dados.csv`)
   }
 
   const exportarGeoJSON = () => {
-    const features = projetosData.participants.map((p) => ({
+    const features = (projetosData?.participants || []).map((p) => ({
       type: 'Feature',
       properties: { id: p.id, nome: p.nome, projetos: p.projetos.join('|'), projeto: p.projetoNome, nucleo: p.nucleoNome },
       geometry: { type: 'Point', coordinates: [p.enderecoResidencial.coordenadas[1], p.enderecoResidencial.coordenadas[0]] },
@@ -329,13 +329,13 @@ export default function MapPage() {
   }
 
   const exportarJSON = () => {
-    const data = { nuclei: projetosData.nuclei, participants: projetosData.participants }
+    const data = { nuclei: projetosData?.nuclei || [], participants: projetosData?.participants || [] }
     const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
     saveAs(blob, `dados.json`)
   }
 
   const exportarKML = () => {
-    const placemarks = projetosData.participants
+    const placemarks = (projetosData?.participants || [])
       .map((p) => `<Placemark><name>${p.nome}</name><Point><coordinates>${p.enderecoResidencial.coordenadas[1]},${p.enderecoResidencial.coordenadas[0]}</coordinates></Point></Placemark>`)
       .join('')
     const kml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -519,7 +519,7 @@ export default function MapPage() {
             />
             {selectedCandidate ? (
               <LayerGroup>
-                {votingPoints.map((v) => (
+                {(votingPoints || []).map((v) => (
                   <Marker key={v.id} position={[v.lat, v.lon]}>
                     <Popup>
                       <div className="space-y-1">

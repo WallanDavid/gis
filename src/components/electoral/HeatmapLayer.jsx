@@ -3,7 +3,7 @@ import { LayerGroup, CircleMarker } from 'react-leaflet'
 export default function HeatmapLayer({ pontos, cor, opacity }) {
   return (
     <LayerGroup>
-      {pontos.map((p) => {
+      {(pontos || []).map((p) => {
         const r = Math.max(10, Math.min(40, Math.sqrt(p.votos)))
         return (
           <CircleMarker

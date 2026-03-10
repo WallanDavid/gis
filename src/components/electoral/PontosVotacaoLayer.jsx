@@ -3,7 +3,7 @@ import { CircleMarker, LayerGroup, Popup } from 'react-leaflet'
 export default function PontosVotacaoLayer({ pontos, cor, opacity }) {
   return (
     <LayerGroup>
-      {pontos.map((p) => {
+      {(pontos || []).map((p) => {
         const radius = Math.max(4, Math.min(18, Math.sqrt(p.votos) / 3))
         return (
           <CircleMarker

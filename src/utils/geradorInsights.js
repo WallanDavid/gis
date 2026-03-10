@@ -1,6 +1,6 @@
 export const gerarInsights = (dadosEleitorais, dadosProjetos) => {
   const insights = []
-  const crescimento = dadosEleitorais.candidatos.map((c) => ({
+  const crescimento = (dadosEleitorais?.candidatos || []).map((c) => ({
     nome: c.nome,
     crescimento: c.votos2022 > 0 ? ((c.votos2024 - c.votos2022) / c.votos2022) * 100 : 0,
   }))
@@ -16,13 +16,13 @@ export const gerarInsights = (dadosEleitorais, dadosProjetos) => {
       `Identificamos ${territoriosEmpate.length} territórios com empate técnico, representando oportunidades de crescimento.`
     )
   }
-  const projetosEmBairrosFortes = (dadosProjetos.nucleos || []).filter((n) =>
-    (dadosEleitorais.bairrosFortes || []).includes(n.bairro)
+  const projetosEmBairrosFortes = (dadosProjetos?.nucleos || []).filter((n) =>
+    (dadosEleitorais?.bairrosFortes || []).includes(n.bairro)
   ).length
   insights.push(`${projetosEmBairrosFortes} núcleos de projetos estão em bairros de alta votação do candidato líder.`)
-  const multiplosProjetos = (dadosProjetos.participantes || []).filter((p) => (p.projetos || []).length > 1).length
+  const multiplosProjetos = (dadosProjetos?.participantes || []).filter((p) => (p.projetos || []).length > 1).length
   insights.push(`${multiplosProjetos} participantes estão em mais de um projeto, indicando maior engajamento.`)
-  const coberturaProjetos = (dadosProjetos.municipiosCobertos || []).length
+  const coberturaProjetos = (dadosProjetos?.municipiosCobertos || []).length
   insights.push(`Os projetos sociais cobrem ${coberturaProjetos} municípios do estado.`)
   return insights
 }
