@@ -4,6 +4,7 @@ import tailwind from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/geointel-rj-v5/',
   plugins: [
     react({
       babel: {
