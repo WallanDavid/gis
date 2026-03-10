@@ -6,10 +6,12 @@ export function useDadosEleitorais({ candidatoId, ano, municipio }) {
     let mounted = true
     ;(async () => {
       try {
-        const mod = await import('../data/eleicoesReais.js')
+        const realPath = '../data/eleicoesReais.js'
+        const mod = await import(/* @vite-ignore */ realPath)
         if (mounted) setData(mod)
       } catch {
-        const mod = await import('../data/eleicoesMock.js')
+        const mockPath = '../data/eleicoesMock.js'
+        const mod = await import(/* @vite-ignore */ mockPath)
         if (mounted) setData(mod)
       }
     })()

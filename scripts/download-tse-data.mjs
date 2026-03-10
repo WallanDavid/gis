@@ -17,26 +17,52 @@ function ensureDir(p) {
   if (!fs.existsSync(p)) fs.mkdirSync(p, { recursive: true })
 }
 
-function download(url, dest) {
+function download(url, dest, retries = 3) {
   return new Promise((resolve, reject) => {
     const file = fs.createWriteStream(dest)
-    https.get(url, (res) => {
-      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-        return download(res.headers.location, dest).then(resolve).catch(reject)
+    const request = https.get(url, { timeout: 30000, headers: { 'User-Agent': 'Mozilla/5.0' } }, (res) => {
+      if (res.statusCode === 200) {
+        const total = Number(res.headers['content-length'] || 0)
+        let downloaded = 0
+        res.on('data', (chunk) => {
+          downloaded += chunk.length
+          if (total && downloaded % (10 * 1024 * 1024) < chunk.length) {
+            const pct = ((downloaded / total) * 100).toFixed(1)
+            console.log(`... ${pct}% (${(downloaded / (1024 * 1024)).toFixed(1)}MB/${(total / (1024 * 1024)).toFixed(1)}MB)`)
+          }
+        })
+        res.pipe(file)
+        file.on('finish', () => file.close(() => resolve(dest)))
+      } else if ((res.statusCode === 301 || res.statusCode === 302) && res.headers.location) {
+        download(res.headers.location, dest, retries).then(resolve).catch(reject)
+      } else {
+        reject(new Error(`HTTP ${res.statusCode}`))
       }
-      if (res.statusCode !== 200) return reject(new Error('status ' + res.statusCode))
-      res.pipe(file)
-      file.on('finish', () => file.close(() => resolve(dest)))
-    }).on('error', reject)
+    })
+    request.on('error', (err) => {
+      if (retries > 0) {
+        console.log(`Falha, tentando novamente... (${retries} tentativas restantes)`)
+        setTimeout(() => download(url, dest, retries - 1).then(resolve).catch(reject), 5000)
+      } else {
+        reject(err)
+      }
+    })
+    request.on('timeout', () => {
+      request.destroy()
+      reject(new Error('Timeout'))
+    })
   })
 }
 
-async function extractCsvFromZip(zipPath) {
-  const dir = await unzipper.Open.file(zipPath)
-  const entry = dir.files.find((f) => /\.csv$/i.test(f.path))
-  if (!entry) throw new Error('csv not found')
-  const buf = await entry.buffer()
-  return buf.toString('utf8')
+async function processZipInChunks(zipPath, ano) {
+  const directory = await unzipper.Open.file(zipPath)
+  const csvFile = directory.files.find((f) => /\.csv$/i.test(f.path))
+  if (!csvFile) throw new Error('CSV não encontrado no zip')
+  const csvData = await csvFile.buffer()
+  const records = parse(csvData.toString('latin1'), { delimiter: ';', columns: true, skip_empty_lines: true })
+  const recordsRJ = records.filter((r) => (r.SG_UF || r.sg_uf) === 'RJ')
+  console.log(`✅ ${recordsRJ.length} registros para o RJ (${ano})`)
+  return recordsRJ
 }
 
 function slug(s) {
@@ -62,13 +88,22 @@ function centroid(feature) {
   return [sum[1] / n, sum[0] / n]
 }
 
-async function geocodeMunicipioCentro(municipio) {
-  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(municipio + ', RJ, Brasil')}`
-  const res = await fetch(url, { headers: { 'User-Agent': 'GeoIntelRJ/1.0' } })
-  const data = await res.json()
-  const first = data[0]
-  if (!first) return null
-  return [Number(first.lat), Number(first.lon)]
+const geocodeCache = {}
+async function geocodeMunicipio(municipio) {
+  if (geocodeCache[municipio]) return geocodeCache[municipio]
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(municipio + ', RJ, Brasil')}&limit=1`
+    const res = await fetch(url, { headers: { 'User-Agent': 'GeoIntel-RJ/1.0' } })
+    const arr = await res.json()
+    if (Array.isArray(arr) && arr[0]) {
+      const obj = { lat: parseFloat(arr[0].lat), lon: parseFloat(arr[0].lon) }
+      geocodeCache[municipio] = obj
+      return obj
+    }
+  } catch {
+    console.log(`Erro ao geocodificar ${municipio}, usando fallback`)
+  }
+  return { lat: -22.9, lon: -43.2 }
 }
 
 async function buildCentroids() {
@@ -105,10 +140,11 @@ async function downloadAndConvert() {
     const year = Number(yr)
     const zipPath = path.join(cacheDir, `tse_${year}.zip`)
     ensureDir(cacheDir)
-    if (!fs.existsSync(zipPath)) await download(TSE_URLS[year], zipPath)
-    const csv = await extractCsvFromZip(zipPath)
-    const rows = parse(csv, { columns: true, skip_empty_lines: true, delimiter: ';' })
-    const rj = rows.filter((r) => (r.SG_UF || r.sg_uf) === 'RJ')
+    if (!fs.existsSync(zipPath)) {
+      console.log(`📥 Baixando dados de ${year}... (pode levar alguns minutos)`)
+      await download(TSE_URLS[year], zipPath)
+    }
+    const rj = await processZipInChunks(zipPath, year)
     const votos = []
     for (const r of rj) {
       const municipio = r.NM_MUNICIPIO || r.nm_municipio || r.MUNICIPIO || r.municipio
@@ -123,14 +159,11 @@ async function downloadAndConvert() {
       if (!latlon) {
         if (cache[key]) latlon = cache[key]
         else {
-          try {
-            latlon = await geocodeMunicipioCentro(key)
-            await new Promise((res) => setTimeout(res, 1100))
-            cache[key] = latlon
-            saveCache(cache)
-          } catch {
-            latlon = [-22.9, -43.2]
-          }
+          const g = await geocodeMunicipio(key)
+          await new Promise((res) => setTimeout(res, 1100))
+          latlon = [g.lat, g.lon]
+          cache[key] = latlon
+          saveCache(cache)
         }
       }
       votos.push({
@@ -153,4 +186,3 @@ async function downloadAndConvert() {
 downloadAndConvert().catch((e) => {
   process.exitCode = 1
 })
-

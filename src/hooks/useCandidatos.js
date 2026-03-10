@@ -6,10 +6,12 @@ export function useCandidatos() {
     let ok = true
     ;(async () => {
       try {
-        const mod = await import('../data/eleicoesReais.js')
+        const realPath = '../data/eleicoesReais.js'
+        const mod = await import(/* @vite-ignore */ realPath)
         if (ok) setCands(mod.candidatos || [])
       } catch {
-        const mod = await import('../data/eleicoesMock.js')
+        const mockPath = '../data/eleicoesMock.js'
+        const mod = await import(/* @vite-ignore */ mockPath)
         if (ok) setCands(mod.candidatos || [])
       }
     })()
@@ -19,4 +21,3 @@ export function useCandidatos() {
   }, [])
   return cands
 }
-
