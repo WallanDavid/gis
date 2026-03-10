@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { projetos } from '../data/projetosMock'
 
-export function useProjetos({ allowedIds = [], selectedIds = [], visMode = 'nucleos', electoralFilter, votesByMunicipio }) {
+export function useProjetos({ allowedIds = [], selectedIds = [], visMode = 'nucleos', electoralFilter, votesByMunicipio = {} }) {
   const data = useMemo(() => {
     const allowed = new Set(allowedIds.length ? allowedIds : projetos.map((p) => p.id))
     const selected = new Set(selectedIds.length ? selectedIds : projetos.filter((p) => allowed.has(p.id)).map((p) => p.id))

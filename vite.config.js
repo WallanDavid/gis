@@ -15,13 +15,17 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          leaflet: ['leaflet', 'react-leaflet'],
-          charts: ['recharts'],
-          pdf: ['jspdf', 'jspdf-autotable', 'html2canvas'],
+        manualChunks(id) {
+          if (id.includes('src/data/eleicoesReais.js')) return 'candidatos-rj'
+          if (id.includes('node_modules')) {
+            if (id.includes('leaflet') || id.includes('react-leaflet')) return 'leaflet'
+            if (id.includes('recharts')) return 'charts'
+            if (id.includes('jspdf') || id.includes('html2canvas') || id.includes('jspdf-autotable')) return 'pdf'
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-hot-toast')) return 'vendor'
+          }
         },
       },
     },
-    chunkSizeWarningLimit: 600,
+    chunkSizeWarningLimit: 1000,
   },
 })

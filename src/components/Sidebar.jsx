@@ -112,7 +112,7 @@ export default function Sidebar({
                 onChange={(e) => onSelectCandidate(e.target.value || null)}
               >
                 <option value="">Candidato</option>
-                {candidates.map((c) => (
+                {(candidates || []).map((c) => (
                   <option key={c} value={c}>{c}</option>
                 ))}
               </select>
@@ -121,7 +121,7 @@ export default function Sidebar({
                 value={selectedYear || ''}
                 onChange={(e) => onSelectYear(Number(e.target.value))}
               >
-                {years.map((y) => (
+                {(years || []).map((y) => (
                   <option key={y} value={y}>{y}</option>
                 ))}
               </select>
@@ -148,7 +148,7 @@ export default function Sidebar({
                 onChange={(e) => onChangeElectoralCandidate(e.target.value || null)}
               >
                 <option value="">Candidato</option>
-                {electoralCandidates.map((c) => (
+            {(electoralCandidates || []).map((c) => (
                   <option key={c.id} value={c.id}>{c.nome}</option>
                 ))}
               </select>
@@ -172,7 +172,7 @@ export default function Sidebar({
                 onChange={(e) => onChangeMunicipality(e.target.value || null)}
               >
                 <option value="">Todos os municípios</option>
-                {municipalities.map((m) => (
+                {(municipalities || []).map((m) => (
                   <option key={m} value={m}>{m}</option>
                 ))}
               </select>
@@ -188,7 +188,7 @@ export default function Sidebar({
                 onChange={(e) => onSelectProject(e.target.value || null)}
               >
                 <option value="">Selecionar</option>
-                {projects.map((p) => (
+                {(projects || []).map((p) => (
                   <option key={p} value={p}>{p}</option>
                 ))}
               </select>
@@ -200,7 +200,7 @@ export default function Sidebar({
             <div>
               <div className="text-xs uppercase text-slate-500">Projetos Sociais</div>
               <div className="mt-2 grid grid-cols-1 gap-2">
-                {projectsAvailable.map((p) => (
+                {(projectsAvailable || []).map((p) => (
                   <label key={p.id} className="flex items-center gap-2 text-sm">
                     <input type="checkbox" checked={selectedProjectIds.includes(p.id)} onChange={() => onToggleProjectId(p.id)} />
                     <span className="inline-block w-3 h-3 rounded" style={{ background: p.cor }} />
@@ -224,7 +224,7 @@ export default function Sidebar({
                 <div className="grid grid-cols-2 gap-2">
                   <select className="border rounded p-2" onChange={(e) => (window.__candSel = e.target.value)}>
                     <option value="">Candidato</option>
-                    {candidates.map((c) => (
+                    {(candidates || []).map((c) => (
                       <option key={c} value={c}>{c}</option>
                     ))}
                   </select>
@@ -237,7 +237,7 @@ export default function Sidebar({
                   <input className="border rounded p-2" type="number" placeholder="votos" onChange={(e) => (window.__vMin = Number(e.target.value))} />
                   <input className="border rounded p-2" type="number" placeholder="e (opcional)" onChange={(e) => (window.__vMax = Number(e.target.value))} />
                   <select className="border rounded p-2" onChange={(e) => (window.__anoSel = Number(e.target.value))}>
-                    {years.map((y) => <option key={y} value={y}>{y}</option>)}
+                    {(years || []).map((y) => <option key={y} value={y}>{y}</option>)}
                   </select>
                   <button
                     className="border rounded p-2"
@@ -288,7 +288,7 @@ export default function Sidebar({
               {Array.isArray(discoveredLayers) && discoveredLayers.length > 0 ? (
                 <select className="mt-2 w-full border rounded p-2" onChange={(e) => onSelectDiscoveredLayer(e.target.value)}>
                   <option>Selecionar camada do GetCapabilities</option>
-                  {discoveredLayers.map((l) => (
+                  {(discoveredLayers || []).map((l) => (
                     <option key={l.name} value={l.name}>{l.title || l.name}</option>
                   ))}
                 </select>

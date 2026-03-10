@@ -235,13 +235,9 @@ export default function MapPage() {
 
   const gerarPDF = async () => {
     const node = document.getElementById('map-root')
-    const candIds = ['cand1', 'cand2', 'cand3']
-    const candidatosTotals = candIds.map((id) => {
-      const nome = id === 'cand1' ? 'Candidato A' : id === 'cand2' ? 'Candidato B' : 'Candidato C'
-      const tot = (yr) => (elections[yr] || []).filter((x) => x.candidatoId ? x.candidatoId === id : x.candidate === nome)
-        .reduce((a, b) => a + (b.total_votos || b.votos || 0), 0)
-      return { nome, votos2022: tot(2022), votos2024: tot(2024) }
-    })
+    const candSel = (candidatos || []).find((c) => c.id === electoralCandidateId) || null
+    const totalSelecionado = Object.values(votesByMunicipio || {}).reduce((a, b) => a + b, 0)
+    const candidatosTotals = candSel ? [{ nome: candSel.nome, votos2022: 0, votos2024: totalSelecionado }] : []
     const dadosEleitorais = {
       candidatos: candidatosTotals,
       municipios: Object.entries(votesByMunicipio).map(([m, v]) => ({ municipio: m, totalVotos: v, votosPrimeiro: v, votosSegundo: Math.max(0, v - 100) })),
@@ -565,7 +561,7 @@ export default function MapPage() {
               onSelectProject={setSelectedProject}
               showAddresses={showAddresses}
               onToggleAddresses={setShowAddresses}
-              candidates={[...new Set([...elections[2022], ...elections[2024]].map((x) => x.candidate))].filter(Boolean)}
+              candidates={[...new Set([...(elections[2022] || []), ...(elections[2024] || [])].map((x) => x.candidate))].filter(Boolean)}
               years={[2022, 2024]}
               selectedCandidate={selectedCandidate}
               selectedYear={selectedYear}
