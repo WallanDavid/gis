@@ -2,9 +2,14 @@ import { useMemo } from 'react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs'
 import InfoTooltip from './InfoTooltip'
-import { Camera, FileText, Map as MapIcon, BarChart as BarIcon, Users, Lightbulb, Share2, Copy, Download, Code, Globe } from 'lucide-react'
+import { Camera, FileText, Map as MapIcon, BarChart as BarIcon, Users, Lightbulb, Share2, Copy, Download, Code, Globe, UserCheck } from 'lucide-react'
+import { ProjectFilters } from './Filters/ProjectFilters'
 
 export default function Sidebar({
+  reabilitaFilters,
+  setReabilitaFilters,
+  reabilitaMunicipalities = [],
+  reabilitaInconsistenciesCount = 0,
   projects,
   selectedProject,
   onSelectProject,
@@ -96,9 +101,10 @@ export default function Sidebar({
       <div className="p-3 border-b text-slate-700 font-semibold">Ferramentas</div>
       <div className="p-3 overflow-auto">
         <Tabs defaultValue="eleitoral" className="w-full">
-          <TabsList className="grid grid-cols-4 mb-4">
+          <TabsList className="grid grid-cols-5 mb-4">
             <TabsTrigger value="eleitoral" className="text-xs">🗳️ Eleitoral</TabsTrigger>
             <TabsTrigger value="projetos" className="text-xs">👥 Projetos</TabsTrigger>
+            <TabsTrigger value="reabilita" className="text-xs">👵 60+</TabsTrigger>
             <TabsTrigger value="wms" className="text-xs">🗺️ WMS</TabsTrigger>
             <TabsTrigger value="exportar" className="text-xs">📤 Exportar</TabsTrigger>
           </TabsList>
@@ -197,6 +203,27 @@ export default function Sidebar({
                 Mostrar endereço das pessoas que participaram
               </label>
             </div>
+          </TabsContent>
+
+          <TabsContent value="reabilita" className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="text-xs uppercase text-slate-500">Projeto 60+</div>
+              <label className="flex items-center gap-2 text-xs font-medium text-slate-600">
+                <input
+                  type="checkbox"
+                  checked={reabilitaFilters.enabled}
+                  onChange={(e) => setReabilitaFilters(prev => ({ ...prev, enabled: e.target.checked }))}
+                />
+                Ativar Camada
+              </label>
+            </div>
+            
+            <ProjectFilters 
+              filters={reabilitaFilters}
+              setFilters={setReabilitaFilters}
+              municipalities={reabilitaMunicipalities}
+              inconsistenciesCount={reabilitaInconsistenciesCount}
+            />
             <div>
               <div className="text-xs uppercase text-slate-500">Projetos Sociais</div>
               <div className="mt-2 grid grid-cols-1 gap-2">

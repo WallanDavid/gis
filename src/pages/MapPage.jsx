@@ -16,6 +16,8 @@ import html2canvas from 'html2canvas'
 import { saveAs } from 'file-saver'
 import { gerarRelatorioPDF } from '../utils/relatorioPDF'
 import { toast } from 'react-hot-toast'
+import { useReabilita60 } from '../hooks/useReabilita60'
+import { Reabilita60Layer } from '../components/Map/Reabilita60Layer'
  
 
 const centerRJ = [-22.9, -43.2]
@@ -76,6 +78,24 @@ export default function MapPage() {
   const [gerandoPDF, setGerandoPDF] = useState(false)
   const [progressoPDF, setProgressoPDF] = useState(0)
   const [loadingElections, setLoadingElections] = useState(true)
+
+  // Projeto 60+ Data
+  const { normalizedData: reabilitaRaw, inconsistencies: reabilitaInconsistencies, rjMunicipalities: reabilitaMunicipalities } = useReabilita60()
+  const [reabilitaFilters, setReabilitaFilters] = useState({
+    nameSearch: '',
+    municipality: '',
+    showOnlyMulti: false,
+    enabled: true
+  })
+
+  const filteredReabilitaData = useMemo(() => {
+    return reabilitaRaw.filter(person => {
+      const matchName = person.nome.toLowerCase().includes(reabilitaFilters.nameSearch.toLowerCase())
+      const matchMun = !reabilitaFilters.municipality || person.municipio === reabilitaFilters.municipality
+      const matchMulti = !reabilitaFilters.showOnlyMulti || person.pessoa_em_multiplos_projetos
+      return matchName && matchMun && matchMulti
+    })
+  }, [reabilitaRaw, reabilitaFilters])
 
   // Loader otimizado: carrega 2024 primeiro; 2022 sob demanda (comparar ou seleção)
   useEffect(() => {
@@ -561,6 +581,9 @@ export default function MapPage() {
               visMode={projectsVisMode}
               onFocusRegion={focusRegionFromNucleo}
             />
+            {reabilitaFilters.enabled && (
+              <Reabilita60Layer data={filteredReabilitaData} />
+            )}
             {selectedCandidate ? (
               <LayerGroup>
                 {(votingPoints || []).map((v) => (
@@ -600,7 +623,11 @@ export default function MapPage() {
           </div>
           <div className="h-[calc(100%-3rem)]">
             <Sidebar
-              projects={projects}
+            reabilitaFilters={reabilitaFilters}
+            setReabilitaFilters={setReabilitaFilters}
+            reabilitaMunicipalities={reabilitaMunicipalities}
+            reabilitaInconsistenciesCount={reabilitaInconsistencies.length}
+            projects={projects}
               selectedProject={selectedProject}
               onSelectProject={setSelectedProject}
               showAddresses={showAddresses}
